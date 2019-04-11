@@ -27,11 +27,13 @@ config :mix_test_watch,
   clear: true
 
 config :redix,
-  host: "localhost"
+  host: "redis-dev.7vmz1p.0001.usw2.cache.amazonaws.com"
 
 config :discovery_api,
   divo: "test/integration/docker-compose.yaml",
-  divo_wait: [dwell: 1000, max_tries: 20]
+  divo_wait: [dwell: 1000, max_tries: 20],
+  ldap_user: System.get_env("LDAP_USER"),
+  ldap_pass: System.get_env("LDAP_PASSWORD")
 
 config :paddle, Paddle,
   host: System.get_env("LDAP_HOST"),
