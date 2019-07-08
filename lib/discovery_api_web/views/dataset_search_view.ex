@@ -42,7 +42,8 @@ defmodule DiscoveryApiWeb.DatasetSearchView do
       description: model.description,
       sourceType: model.sourceType,
       sourceUrl: model.sourceUrl,
-      lastUpdatedDate: model.lastUpdatedDate
+      lastUpdatedDate: model.lastUpdatedDate,
+      isRemote: model.isRemote
     }
   end
 

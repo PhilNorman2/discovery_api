@@ -23,7 +23,8 @@ defmodule DiscoveryApiWeb.DatasetSearchViewTest do
             :sourceUrl => "http://example.com",
             :sourceType => "remote",
             :private => false,
-            :lastUpdatedDate => :date_placeholder
+            :lastUpdatedDate => :date_placeholder,
+            :isRemote => true
           }
         ],
         facets: %{organization: [name: "org", count: 1], keywords: [name: "cat", count: 1]},
@@ -54,7 +55,8 @@ defmodule DiscoveryApiWeb.DatasetSearchViewTest do
           :description => "best ever",
           :sourceUrl => "http://example.com",
           :sourceType => "remote",
-          :lastUpdatedDate => :date_placeholder
+          :lastUpdatedDate => :date_placeholder,
+          :isRemote => true
         }
       ]
     }
