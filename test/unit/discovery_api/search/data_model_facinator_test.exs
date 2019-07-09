@@ -48,7 +48,7 @@ defmodule DiscoveryApi.Search.DataModelFacinatorTest do
                  %{name: "my cool keywords", count: 2},
                  %{name: "uncool keywords", count: 1}
                ],
-               remoteType: [
+               sourceType: [
                  %{count: 2, name: "batch"},
                  %{count: 1, name: "stream"}
                ]

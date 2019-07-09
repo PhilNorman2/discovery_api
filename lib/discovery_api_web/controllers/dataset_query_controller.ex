@@ -62,7 +62,7 @@ defmodule DiscoveryApiWeb.DatasetQueryController do
 
   defp get_column_names(system_name, columns_string) do
     case get_column_names(system_name) do
-      {:ok, names} -> {:ok, clean_columns(columns_string)}
+      {:ok, _names} -> {:ok, clean_columns(columns_string)}
       {_, error} -> {:error, error}
     end
   end

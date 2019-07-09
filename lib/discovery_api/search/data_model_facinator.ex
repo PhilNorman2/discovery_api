@@ -15,7 +15,7 @@ defmodule DiscoveryApi.Search.DataModelFacinator do
     %{
       organization: unique_facets_with_count(models, :organization),
       keywords: unique_facets_with_count(models, :keywords),
-      remoteType: unique_facets_with_count(models, :sourceType)
+      sourceType: unique_facets_with_count(models, :sourceType)
     }
   end
 

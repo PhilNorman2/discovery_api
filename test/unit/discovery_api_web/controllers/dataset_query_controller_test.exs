@@ -292,6 +292,8 @@ defmodule DiscoveryApiWeb.DatasetQueryControllerTest do
                conn
                |> put_req_header("accept", "application/json")
                |> get("/api/v1/dataset/bobber/query", columns: "id,one; select * from system; two")
+               |> response(400)
+             end) =~
                "Query contained illegal character(s): [SELECT id, one; select * from system; two FROM coda__test_dataset]"
 
       assert_called(
