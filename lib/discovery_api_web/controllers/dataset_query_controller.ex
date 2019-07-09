@@ -41,12 +41,12 @@ defmodule DiscoveryApiWeb.DatasetQueryController do
         |> Stream.concat()
         |> stream_data(conn, system_name, get_format(conn))
 
-      {_, error} ->
+      error ->
         handle_error(conn, error)
     end
   end
 
-  defp handle_error(conn, {type, reason}) do
+  defp(handle_error(conn, {type, reason})) do
     case type do
       :bad_request ->
         Logger.error(reason)
