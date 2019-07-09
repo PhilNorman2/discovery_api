@@ -4,7 +4,7 @@ defmodule DiscoveryApi.Search.DataModelFacinator do
   """
 
   def extract_facets([] = _models, selected_facets) do
-    default_values = %{organization: [], keywords: []}
+    default_values = %{organization: [], keywords: [], sourceType: []}
 
     Enum.into(selected_facets, default_values, fn {name, values} ->
       {name, Enum.map(values, &facet_map(&1, 0))}
@@ -14,7 +14,8 @@ defmodule DiscoveryApi.Search.DataModelFacinator do
   def extract_facets(models, _selected_facets) do
     %{
       organization: unique_facets_with_count(models, :organization),
-      keywords: unique_facets_with_count(models, :keywords)
+      keywords: unique_facets_with_count(models, :keywords),
+      remoteType: unique_facets_with_count(models, :sourceType)
     }
   end
 

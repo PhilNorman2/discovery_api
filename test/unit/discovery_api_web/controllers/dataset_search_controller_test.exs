@@ -7,8 +7,8 @@ defmodule DiscoveryApiWeb.DatasetSearchControllerTest do
 
   setup do
     mock_dataset_summaries = [
-      generate_model("Paul", ~D(1970-01-01)),
-      generate_model("Richard", ~D(2001-09-09))
+      generate_model("Paul", ~D(1970-01-01), "remote"),
+      generate_model("Richard", ~D(2001-09-09), "batch")
     ]
 
     allow(Model.get_all(), return: mock_dataset_summaries)
@@ -16,7 +16,7 @@ defmodule DiscoveryApiWeb.DatasetSearchControllerTest do
   end
 
   describe "fetch dataset summaries" do
-    data_test "request to search #{inspect(params)} has #{inspect(selector)} == #{inspect(result)}",
+    data_test "request to search with #{inspect(params)}",
               %{conn: conn} do
       response_map = conn |> get("/api/v1/dataset/search", params) |> json_response(200)
       actual = get_in(response_map, selector)
@@ -89,7 +89,21 @@ defmodule DiscoveryApiWeb.DatasetSearchControllerTest do
         [
           [facets: %{organization: ["Babs"], keywords: ["Fruit"]}],
           ["metadata", "facets"],
-          %{"keywords" => [%{"name" => "Fruit", "count" => 0}], "organization" => [%{"name" => "Babs", "count" => 0}]}
+          %{
+            "keywords" => [%{"name" => "Fruit", "count" => 0}],
+            "organization" => [%{"name" => "Babs", "count" => 0}],
+            "sourceType" => []
+          }
+        ],
+        [
+          [facets: %{sourceType: ["remote"]}],
+          ["results", Access.all(), "id"],
+          ["Paul"]
+        ],
+        [
+          [facets: %{sourceType: ["batch"]}],
+          ["results", Access.all(), "id"],
+          ["Richard"]
         ]
       ])
     end
@@ -110,7 +124,7 @@ defmodule DiscoveryApiWeb.DatasetSearchControllerTest do
     end
   end
 
-  defp generate_model(id, date) do
+  defp generate_model(id, date, sourceType) do
     Helper.sample_model(%{
       description: "#{id}-description",
       fileTypes: ["csv"],
@@ -120,6 +134,7 @@ defmodule DiscoveryApiWeb.DatasetSearchControllerTest do
       modifiedDate: "#{date}",
       organization: "#{id} Co.",
       keywords: ["#{id} keywords"],
+      sourceType: sourceType,
       organizationDetails: %{
         orgTitle: "#{id}-org-title",
         orgName: "#{id}-org-name",

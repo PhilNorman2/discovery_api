@@ -13,7 +13,8 @@ defmodule DiscoveryApi.Data.SearchTest do
         title: "one",
         keywords: ["model", "one"],
         organization: "one",
-        description: "one"
+        description: "one",
+        sourceType: "remote"
       })
 
     model_two =
@@ -22,7 +23,8 @@ defmodule DiscoveryApi.Data.SearchTest do
         title: "two",
         keywords: ["model", "two"],
         organization: "two",
-        description: "two"
+        description: "two",
+        sourceType: "batch"
       })
 
     Model.save(model_one)
@@ -43,7 +45,20 @@ defmodule DiscoveryApi.Data.SearchTest do
              "response body included too many keyword entries #{inspect(body)}"
 
       results = Jason.decode!(body)
-      assert get_in(results, ["metadata", "facets", "keywords"]) == [%{"name" => "model", "count" => 0}]
+      assert [%{"name" => "model", "count" => 0}] == get_in(results, ["metadata", "facets", "keywords"])
+    end
+
+    test "returns sourceType facets" do
+      params = Plug.Conn.Query.encode(%{facets: %{sourceType: ["remote"]}})
+
+      %{status_code: _status_code, body: body} =
+        "http://localhost:4000/api/v1/dataset/search/?#{params}"
+        |> HTTPoison.get!()
+
+      results = Jason.decode!(body)["results"]
+      actual = Enum.map(results, fn result -> result["title"] end)
+
+      assert ["one"] == actual
     end
   end
 end

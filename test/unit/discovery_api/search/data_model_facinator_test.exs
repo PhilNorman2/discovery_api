@@ -11,22 +11,26 @@ defmodule DiscoveryApi.Search.DataModelFacinatorTest do
            Helper.sample_model(%{
              title: "Ben's head canon",
              organization: "OrgA",
-             keywords: ["my cool keywords", "another keywords"]
+             keywords: ["my cool keywords", "another keywords"],
+             sourceType: "batch"
            }),
            Helper.sample_model(%{
              title: "Ben's Caniac Combo",
              organization: "OrgA",
-             keywords: []
+             keywords: [],
+             sourceType: "batch"
            }),
            Helper.sample_model(%{
              title: "Jarred's irrational attachment to natorism's",
              organization: "OrgB",
-             keywords: ["my cool keywords"]
+             keywords: ["my cool keywords"],
+             sourceType: "stream"
            }),
            Helper.sample_model(%{
              title: "hi its erin",
              organization: "",
-             keywords: ["uncool keywords"]
+             keywords: ["uncool keywords"],
+             sourceType: []
            })
          ]
        ]}
@@ -43,6 +47,10 @@ defmodule DiscoveryApi.Search.DataModelFacinatorTest do
                  %{name: "another keywords", count: 1},
                  %{name: "my cool keywords", count: 2},
                  %{name: "uncool keywords", count: 1}
+               ],
+               remoteType: [
+                 %{count: 2, name: "batch"},
+                 %{count: 1, name: "stream"}
                ]
              }
     end
@@ -50,15 +58,20 @@ defmodule DiscoveryApi.Search.DataModelFacinatorTest do
     test "given an empty list of models and empty list of selected facets should return empty lists" do
       assert DataModelFacinator.extract_facets([], %{}) == %{
                organization: [],
-               keywords: []
+               keywords: [],
+               sourceType: []
              }
     end
 
     test "given an empty list of models and a non-empty list of selected facets should return selected facets with 0 counts" do
-      assert DataModelFacinator.extract_facets([], %{organization: ["8-Corner"], keywords: ["turbo", "crust"]}) == %{
-               organization: [%{name: "8-Corner", count: 0}],
-               keywords: [%{name: "turbo", count: 0}, %{name: "crust", count: 0}]
-             }
+      facets = %{organization: ["8-Corner"], keywords: ["turbo", "crust"], sourceType: ["ingest"]}
+
+      assert DataModelFacinator.extract_facets([], facets) ==
+               %{
+                 organization: [%{name: "8-Corner", count: 0}],
+                 keywords: [%{name: "turbo", count: 0}, %{name: "crust", count: 0}],
+                 sourceType: [%{name: "ingest", count: 0}]
+               }
     end
   end
 end
