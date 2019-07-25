@@ -60,13 +60,12 @@ defmodule DiscoveryApiWeb.DatasetDownloadController do
   end
 
   def stream_from_s3(conn, format) do
-    bucket_name()
-    |> ExAws.S3.download_file(
-      get_file_key(conn.assigns.model, format),
-      "dataset"
-    )
-    |> ExAws.stream!(region: region())
-    |> stream_data(conn, conn.assigns.model.name, format)
+    config = Keyword.merge(Application.get_all_env(:ex_aws), Application.get_env(:ex_aws, :s3)) |> Enum.into(%{})
+
+    {:ok, url} =
+      ExAws.S3.presigned_url(config, :get, bucket_name(), get_file_key(conn.assigns.model, format), region: region(), expires_in: 5)
+
+    redirect(conn, external: url)
   end
 
   defp file_exists(org_name, data_name, extension) do
